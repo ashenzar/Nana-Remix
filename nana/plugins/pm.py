@@ -42,7 +42,8 @@ async def pm_block(client, message):
     if message.chat.id in AdminSettings:
         set_whitelist(message.chat.id, True)
     if not get_whitelist(message.chat.id):
-        await client.read_history(message.chat.id)
+        if message.service:
+            return
         if message.text:
             for x in message.text.lower().split():
                 if x in BLACKLIST:
@@ -154,10 +155,7 @@ async def pm_button(client, query):
                 callback_data=f'engine_pm_blk-{query.from_user.id}',
             ),
         )
-        pm_bot_mention = mention_markdown(
-            query.from_user.id, query.from_user.first_name,
-        )
-        pm_bot_message = f'~{pm_bot_mention} want to contact you~'
+        pm_bot_message = f'~{query.from_user.mention} want to contact you~'
         await setbot.send_message(
             NOTIFY_ID,
             pm_bot_message,
@@ -168,7 +166,7 @@ async def pm_button(client, query):
         await setbot.edit_inline_text(query.inline_message_id, '👍')
         await app.send_message(
             query.from_user.id,
-            'Hello, if you want to report any bugs, visit @NanaBotSupport.',
+            f'Hello {query.from_user.mention}, report bugs in @nanabotsupport',
         )
     elif re.match('engine_pm_none', query.data):
         await setbot.edit_inline_text(query.inline_message_id, '👍')
@@ -180,7 +178,8 @@ async def pm_button(client, query):
         target = query.data.split('-')[1]
         await query.message.edit_text(f'[Approved to PM]({target})')
         await app.send_message(
-            target, 'Hello, this is **Nana**, my master approved you to PM.',
+            target,
+            f'Hello {query.from_user.mention}, you have been approved to PM.',
         )
         set_whitelist(int(target), True)
     elif re.match(r'engine_pm_blk', query.data):
@@ -188,7 +187,7 @@ async def pm_button(client, query):
         await query.message.edit_text('That user was blocked ~')
         await app.send_message(
             target,
-            'Hello, you have been blocked.\nSorry about this!',
+            f'Hello {query.from_user.mention}, you have been blocked.\nSorry about this!',
         )
         await app.block_user(target)
     else:
