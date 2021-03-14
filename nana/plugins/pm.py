@@ -14,8 +14,6 @@ from nana import Owner
 from nana import OwnerName
 from nana import PM_PERMIT
 from nana import setbot
-from nana.utils.parser import mention_markdown
-
 if DB_AVAILABLE:
     from nana.plugins.database.pm_db import (
         set_whitelist,

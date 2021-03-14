@@ -34,7 +34,7 @@ try:
 except UnicodeDecodeError:
     strings = {
         i: yaml.full_load(
-            open('locales/' + i + '.yml', encoding="utf8"),
+            open('locales/' + i + '.yml', encoding='utf8'),
         ) for i in LANGUAGES
     }
 
