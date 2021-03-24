@@ -118,6 +118,9 @@ gauth = GoogleAuth()
 DB_AVAILABLE = False
 BOTINLINE_AVAIABLE = False
 
+RADIO_GROUPS = get_var("RADIO_GROUPS", None)
+RADIO_CHANNEL = get_var("RADIO_CHANNEL", None)
+
 
 # Postgresql
 def mulaisql() -> scoped_session:
