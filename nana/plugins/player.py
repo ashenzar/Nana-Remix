@@ -186,7 +186,6 @@ async def play_track(client, m: Message):
     # show playlist
     if not m.reply_to_message or not m.reply_to_message.audio:
         await mp.send_playlist()
-        await m.delete()
         return
     # check already added
     m_reply = m.reply_to_message
@@ -210,7 +209,6 @@ async def play_track(client, m: Message):
     await mp.send_playlist()
     for track in playlist[:2]:
         await download_audio(track)
-    await m.delete()
 
 
 @app.on_message(
@@ -232,7 +230,6 @@ async def show_current_playing_time(client, m: Message):
         f"{timedelta(seconds=playlist[0].audio.duration)}",
         disable_notification=True
     )
-    await m.delete()
 
 
 @app.on_message(
@@ -277,7 +274,6 @@ async def join_group_call(client, m: Message):
         await m.reply_text("Already joined a voice chat.")
         return
     await group_call.start(m.chat.id)
-    await m.delete()
 
 
 @app.on_message(
@@ -291,7 +287,6 @@ async def leave_voice_chat(client, m: Message):
     mp.playlist.clear()
     group_call.input_filename = ''
     await group_call.stop()
-    await m.delete()
 
 
 @app.on_message(
@@ -352,7 +347,6 @@ async def pause_playing(_, m: Message):
     await mp.update_start_time(reset=True)
     reply = await m.reply_text("Paused.", quote=False)
     mp.msg['pause'] = reply
-    await m.delete()
 
 
 @app.on_message(
@@ -366,7 +360,6 @@ async def resume_playing(_, m: Message):
     reply = await m.reply_text("Resumed.", quote=False)
     if mp.msg.get('pause') is not None:
         await mp.msg['pause'].delete()
-    await m.delete()
 
 
 @app.on_message(
